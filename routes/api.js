@@ -1,6 +1,6 @@
 const path = require('path');
 const fs =  require('fs');
-// const uniqid = require('uniqid');  //give unique id
+// const {v4:uuid4} = require('uuid');  //give unique id
 
 module.exports = app =>{
 
@@ -11,6 +11,7 @@ app.get('/api/notes', (req, res) =>{
 
 // POST - add notes
 app.post('/api/notes', (req, res) => {
+  fs.readFile('db/db.json').then((db) => res.json(JSON.parse(db)));
 
   const { title, text } = req.body;
 
@@ -18,7 +19,7 @@ app.post('/api/notes', (req, res) => {
     const newNotes = {
       title,
       text,
-      // id: uniqid() //unique id added here
+      // id: uuidv4(), //unique id added here
     };
 
     readAndAppend(newNotes, 'db/db.json');
@@ -28,9 +29,10 @@ app.post('/api/notes', (req, res) => {
   }
 });
 
-// GET read json file and return all saved notes
-fb.get('/', (req, res) => {
-  fs.readFile('db/db.json').then((data) => res.json(JSON.parse(data)));
+// POST read json file and return all saved notes
+fb.post('/', (req, res) => {
+  fs.writeFile('db/db.json'.JSON.stringify(db));
+  res.json(db);
 });
-};
 
+}
